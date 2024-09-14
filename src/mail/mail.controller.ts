@@ -13,13 +13,13 @@ export class MailController {
 
   @Get('check')
   async checkEmails() {
-    try {
       const emails = await this.mailService.getUnreadEmails();
       const emailResults = [];
 
       for (const email of emails) {
         const linkValidationResults = await this.linkValidatorService.validateLinks(email.text);
         const copyOriginal = await this.driveService.findProduct(email.copyName);
+        console.log(copyOriginal)
         emailResults.push({
           ...email,
           links: linkValidationResults,
@@ -28,11 +28,5 @@ export class MailController {
       }
 
       return emailResults;
-    } catch (error) {
-      throw new HttpException(
-        'Failed to check emails',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
   }
 }

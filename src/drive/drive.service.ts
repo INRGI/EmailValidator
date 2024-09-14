@@ -1,29 +1,31 @@
 import { Injectable } from "@nestjs/common";
-import * as fs from 'fs';
 import { google, drive_v3 } from 'googleapis';
-import path from "path";
 import { ProductNotFoundException } from "./exception/productNotFound.exception";
 import { cleanFolderName } from "./utils/cleanFolderName";
 import { ProductFolderdException } from "./exception/productFolder.exception";
 import { LiftFolderdException } from "./exception/liftFolder.exception";
 import { HTMLNotFoundException } from "./exception/htmlNotFound.exception";
+import 'dotenv/config';
 
 @Injectable()
 export class DriveService {
     private drive: drive_v3.Drive;
 
     private async initializeDrive(): Promise<void> {
-        const credentials: any = JSON.parse(
-            fs.readFileSync(path.join(__dirname, './config/google-credentials.json'), 'utf-8')
-        );
-
         const auth = new google.auth.GoogleAuth({
-            credentials, 
-            scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+          credentials: {
+            type: process.env.GOOGLE_TYPE,
+            project_id: process.env.GOOGLE_PROJECT_ID,
+            private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
+            private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+            client_email: process.env.GOOGLE_CLIENT_EMAIL,
+            client_id: process.env.GOOGLE_CLIENT_ID,
+          },
+          scopes: ['https://www.googleapis.com/auth/drive.readonly'],
         });
-
+    
         this.drive = google.drive({ version: 'v3', auth });
-    }
+      }
 
     private async findProductFolder(product: string): Promise<drive_v3.Schema$File> {
         const query = `name contains '${product}' and mimeType = 'application/vnd.google-apps.folder'`;
@@ -124,14 +126,17 @@ export class DriveService {
 
     public async findProduct(copy: string): Promise<string> {
         await this.initializeDrive();
-
         const product = copy.match(/[a-zA-Z]+/)[0];
         const liftNumber = copy.match(/[a-zA-Z]+(\d+)/)[1];
 
         const productFolder = await this.findProductFolder(product);
+        console.log(productFolder)
         const subFolderId = await this.findSubFolder(productFolder.id);
+        console.log(subFolderId)
         const liftFolderId = await this.findLiftFolder(subFolderId, liftNumber);
+        console.log(liftFolderId)
         const htmlFileId = await this.findHtmlFile(liftFolderId);
+        console.log(htmlFileId)
 
         return await this.fetchHtmlContent(htmlFileId);
     }

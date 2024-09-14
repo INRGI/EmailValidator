@@ -61,6 +61,8 @@ export class MailService {
           results.push({
             text: parsedEmail.text || '',
             mailbox: mail.mailbox,
+            copyName: mail.copyName,
+            id: mail.id,
           });
 
           const uid = message.attributes.uid;

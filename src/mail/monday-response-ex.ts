@@ -1,5 +1,6 @@
 export const mondayMockData = [
     {
+      id: '1',
       mailbox: 'fchcgcgvv@gmail.com',
       subject: 'Rоbеrt Кіуоsаkі Іssuеs Сrіtісаl Wаrnіng tо Аmеrісаns | Aug 24',
       fromName: 'Market Journal',
@@ -11,6 +12,7 @@ export const mondayMockData = [
     //   fromName: 'Market Journal'
     // },
     {
+      id: '3',
       mailbox: 'fchcgcgvv@gmail.com',
       subject: `Рrоtесt Yоur Sаvіngs frоm Іnflаtіоn - Lеаrn Ноw wіth Іnflесtіоn Роіnt Тrаdеs | Aug 22`,
       fromName: 'Market Journal',

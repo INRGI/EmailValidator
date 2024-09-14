@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MondayModule } from './monday/monday.module';
 import { MailModule } from './mail/mail.module';
+import 'dotenv/config';
 
 @Module({
   imports: [MondayModule, MailModule],

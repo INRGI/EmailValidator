@@ -17,12 +17,11 @@ export class MailController {
       const emailResults = [];
 
       for (const email of emails) {
-        const linkValidationResults = await this.linkValidatorService.validateLinks(email.text);
+        // const linkValidationResults = await this.linkValidatorService.validateLinks(email.text);
         const copyOriginal = await this.driveService.findProduct(email.copyName);
-        console.log(copyOriginal)
         emailResults.push({
           ...email,
-          links: linkValidationResults,
+          // links: linkValidationResults,
           original: copyOriginal,
         });
       }

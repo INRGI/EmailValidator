@@ -6,20 +6,17 @@ import { ProductFolderdException } from './exception/productFolder.exception';
 import { LiftFolderdException } from './exception/liftFolder.exception';
 import { HTMLNotFoundException } from './exception/htmlNotFound.exception';
 import 'dotenv/config';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DriveService {
   private drive: drive_v3.Drive;
   private oauth2Client: OAuth2Client;
 
-  constructor(private configService: ConfigService) {}
-
   private async initializeDrive(): Promise<void> {
     this.oauth2Client = new google.auth.OAuth2(
-     this.configService.get('GOOGLE_CLIENT_ID'),
-      this.configService.get('GOOGLE_CLIENT_SECRET'),
-      this.configService.get('GOOGLE_REDIRECT_URI')
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      process.env.GOOGLE_REDIRECT_URI
     );
 
     const tokens = await this.getTokens();
